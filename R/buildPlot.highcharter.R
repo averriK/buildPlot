@@ -42,11 +42,8 @@ buildPlot.highcharter <- function(data,...) {
   if(is.null(plot.theme)){
     plot.theme <- highcharter::hc_theme_flat()
   }
-  if(is.null(color.palette)){
-    color.palette <- grDevices::hcl.pals()[4]
-  }
-  #
   
+ 
   if(is.null(line.style)){
     line.style <- "Solid"
   }

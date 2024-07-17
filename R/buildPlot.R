@@ -94,8 +94,30 @@ buildPlot <- function(
     fill.group = "",
     ...
 ) {
+  # Validate legend.valign
+  valid_valign <- c("top", "middle", "bottom")
+  valid_align <- c("left", "center", "right")
+  valid_layout <- c("horizontal", "vertical")
+  if (!(legend.valign %in% valid_valign)) {
+    stop(paste("Invalid legend.valign:", legend.valign, "Expected one of:", paste(valid_valign, collapse = ", ")))
+   
+  }
   
+  # Validate legend.align
+  if (!(legend.align %in% valid_align)) {
+    stop(paste("Invalid legend.align:", legend.align, "Expected one of:", paste(valid_align, collapse = ", ")))
+    
+  }
   
+  # Validate legend.layout
+  if (!(legend.layout %in% valid_layout)) {
+    stop(paste("Invalid legend.layout:", legend.layout, "Expected one of:", paste(valid_layout, collapse = ", ")))
+    
+  }
+  # 
+  if(is.null(color.palette)){
+    color.palette <- grDevices::hcl.pals()[4]
+  }
   # Create a list of parameters to pass to the plotting functions
   params <- list(
     plot.object = plot.object,
