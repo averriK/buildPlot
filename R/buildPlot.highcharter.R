@@ -1,51 +1,10 @@
 #' Title
-#' @param plot.object highcharter object
-#' @param plot.title character
-#' @param plot.subtitle character
-#' @param data data.frame
-#' @param plot.height numeric
-#' @param plot.width numeric
-#' @param legend.show boolean
-#' @param xAxis.legend character
-#' @param yAxis.legend character
-#' @param group.legend character
-#' @param color.palette character
-#' @param plot.type character c("line","spline","point","column","bar")
-#' @param xAxis.log boolean
-#' @param yAxis.log boolean
-#' @param xAxis.reverse boolean
-#' @param yAxis.reverse boolean
-#' @param line.size numeric
-#' @param point.size numeric
-#' @param xAxis.max numeric
-#' @param yAxis.max numeric
-#' @param xAxis.min numeric
-#' @param yAxis.min numeric
-#' @param xAxis.label boolean
-#' @param yAxis.label boolean
-#' @param legend.layout character
-#' @param legend.align character c("center", "left", "right")
-#' @param legend.valign character c("top", "middle", "bottom")
-#' @param line.style character c("Solid","Dashed","Dotted", "DashDot","LongDash","LongDashDot","LongDashDotDot")
-#' @param plot.theme highcharter object
-#' @param point.style character c("circle","square","diamond","triangle","triangle-down")
-#' @param plot.save boolean
-#' @param fill.polygon boolean
-#' @param fill.group character
-#' @param xAxis.legend.fontsize character
-#' @param yAxis.legend.fontsize character
-#' @param group.legend.fontsize character
-#' @param plot.title.fontsize character
-#' @param plot.subtitle.fontsize character
-
-
+#' @param ... extra arguments
+#' 
 #' @return highcharter object
 #' @export 
 #' 
 #' @examples
-#' data(iris)
-#' DT <- data.frame(ID=iris$Species,X=iris$Sepal.Length,Y=iris$Sepal.Width)
-#' buildPlot.highcharter(DT,plot.type="scatter")
 #'
 #' @import data.table data.table
 #' @importFrom data.table as.data.table 
@@ -71,57 +30,27 @@
 #'
 
 
-buildPlot.highcharter <- function(
-    data,
-    plot.object = NULL,
-    plot.title = NA,
-    plot.subtitle = NA,
-    plot.height = NA,
-    plot.width = NA,
-    xAxis.legend = "X",
-    yAxis.legend = "Y",
-    group.legend = "ID",
-    color.palette = NULL,
-    plot.type = "line", # c("line","spline","point","column","bar")
-    line.style = "Solid",
-    point.style = "circle",
-    line.size = 1,
-    point.size = 2,
-    xAxis.log = FALSE,
-    yAxis.log = FALSE,
-    xAxis.reverse = FALSE,
-    yAxis.reverse = FALSE,
-    xAxis.max = NA,
-    yAxis.max = NA,
-    xAxis.min = NA,
-    yAxis.min = NA,
-    xAxis.label = TRUE,
-    yAxis.label = TRUE,
-    legend.layout = "horizontal",
-    legend.align = "right", # c("center", "left", "right")
-    legend.valign = "top", # c("top", "middle", "bottom")
-    legend.show = TRUE,
-    plot.theme = highcharter::hc_theme_flat(),
-    plot.save = TRUE,
-    fill.polygon= FALSE,
-    fill.group="",
-    xAxis.legend.fontsize="14px",
-    yAxis.legend.fontsize="14px",
-    group.legend.fontsize="12px",
-    plot.title.fontsize="24px",
-    plot.subtitle.fontsize="18px"
-    
-){
+buildPlot.highcharter <- function(data,...) {
   on.exit(expr = {rm(list = ls())}, add = TRUE)
-  #
   if (!all(c("ID", "X", "Y") %in% colnames(data))) {
     stop("data must contain columns named ID, X, and Y")
   }
+  # Extract parameters from the list and assign them to the current environment
   
+  params <- list(...)
+  list2env(params, envir = environment())
+  if(is.null(plot.theme)){
+    plot.theme <- highcharter::hc_theme_flat()
+  }
   if(is.null(color.palette)){
     color.palette <- grDevices::hcl.pals()[4]
   }
   #
+  
+  if(is.null(line.style)){
+    line.style <- "Solid"
+  }
+  
   DATA <- as.data.table(data)[, c("ID", "X", "Y")]
   
   TIP <- epoxy::epoxy_html("{{group.legend}}:{point.series.name}<br> {{xAxis.legend}}={point.x}<br> {{yAxis.legend}}={point.y}")
