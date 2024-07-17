@@ -28,12 +28,12 @@ buildPlot.ggplot2 <- function(data,...) {
   if(is.null(plot.theme)){
     plot.theme <- theme_flat()
   }
+  
+  
   if(is.null(line.style)){
     line.style <- "solid"
   }
-  if(is.null(color.palette)){
-    color.palette <- grDevices::hcl.pals()[4]
-  }
+  
   DATA <- as.data.table(data)[, c("ID", "X", "Y")]
   DATA[, ID := as.factor(ID)]  # Convert ID to factor
   
@@ -47,7 +47,7 @@ buildPlot.ggplot2 <- function(data,...) {
     PLOT <- plot.object
     PLOT <- PLOT + geom_blank() # Ensure it accepts additional layers
   }
-  
+  PLOT <- PLOT + plot.theme
   
   COLORS <- grDevices::hcl.colors(n = max(3, min(9,length(unique(DATA$ID)))), palette = color.palette)
   
@@ -108,18 +108,45 @@ buildPlot.ggplot2 <- function(data,...) {
   
   PLOT <- PLOT + xlab(xAxis.legend) + ylab(yAxis.legend)
   
-  if (!legend.show) {
-    PLOT <- PLOT + theme(legend.position = "none")
-  } else {
-    PLOT <- PLOT + theme(legend.position = legend.align)
-  }
-  
   if (xAxis.label == FALSE) {
     PLOT <- PLOT + theme(axis.title.x = element_blank())
   }
   
   if (yAxis.label == FALSE) {
     PLOT <- PLOT + theme(axis.title.y = element_blank())
+  }
+  
+  # Determine horizontal and vertical positions
+  x_position <- switch(legend.align,
+                       "left" = 0,
+                       "center" = 0.5,
+                       "right" = 1)
+  
+  y_position <- switch(legend.valign,
+                       "top" = 1,
+                       "middle" = 0.5,
+                       "bottom" = 0)
+  
+  # Determine numeric justification values
+  hjust_value <- switch(legend.align,
+                        "left" = 0,
+                        "center" = 0.5,
+                        "right" = 1)
+  
+  vjust_value <- switch(legend.valign,
+                        "top" = 1,
+                        "middle" = 0.5,
+                        "bottom" = 0)
+  
+  # Applying the legend settings to the plot
+  if (legend.show) {
+    PLOT <- PLOT + theme(
+      legend.position = c(x_position, y_position),
+      legend.direction = legend.layout,
+      legend.justification = c(hjust_value, vjust_value)
+    )
+  } else {
+    PLOT <- PLOT + theme(legend.position = "none")
   }
   
   # Extract major breaks from ggplot2 object
@@ -159,7 +186,7 @@ buildPlot.ggplot2 <- function(data,...) {
     PLOT <- PLOT + geom_hline(yintercept = break_value, linetype = 3, size=0.1, color = "#BDC3C7")
   }
   
-  PLOT <- PLOT + plot.theme
+  
   return(PLOT)
 }
 
