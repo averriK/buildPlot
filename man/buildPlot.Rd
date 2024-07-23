@@ -4,12 +4,130 @@
 \alias{buildPlot}
 \title{Title}
 \usage{
-buildPlot(data, library = "ggplot2", ...)
+buildPlot(
+  data,
+  library = "highcharter",
+  plot.object = NULL,
+  plot.title = NA,
+  plot.subtitle = NA,
+  plot.height = NA,
+  plot.width = NA,
+  xAxis.legend = "X",
+  yAxis.legend = "Y",
+  group.legend = "ID",
+  color.palette = NULL,
+  plot.type = "line",
+  line.style = NULL,
+  point.style = 16,
+  line.size = 1,
+  point.size = 3,
+  xAxis.log = FALSE,
+  yAxis.log = FALSE,
+  xAxis.reverse = FALSE,
+  yAxis.reverse = FALSE,
+  xAxis.max = NA,
+  yAxis.max = NA,
+  xAxis.min = NA,
+  yAxis.min = NA,
+  xAxis.label = TRUE,
+  yAxis.label = TRUE,
+  legend.layout = "horizontal",
+  legend.align = "right",
+  legend.valign = "top",
+  legend.show = TRUE,
+  plot.save = TRUE,
+  plot.theme = NULL,
+  xAxis.legend.fontsize = "14px",
+  yAxis.legend.fontsize = "14px",
+  group.legend.fontsize = "12px",
+  plot.title.fontsize = "24px",
+  plot.subtitle.fontsize = "18px",
+  print.max.abs = TRUE,
+  fill.polygon = FALSE,
+  fill.group = "",
+  ...
+)
 }
 \arguments{
 \item{data}{data.frame}
 
 \item{library}{character c("ggplot2","gg","highcharter","hc","plotly")}
+
+\item{plot.object}{highcharter object}
+
+\item{plot.title}{character}
+
+\item{plot.subtitle}{character}
+
+\item{plot.height}{numeric}
+
+\item{plot.width}{numeric}
+
+\item{xAxis.legend}{character}
+
+\item{yAxis.legend}{character}
+
+\item{group.legend}{character}
+
+\item{color.palette}{character}
+
+\item{plot.type}{character c("line","spline","point","column","bar")}
+
+\item{line.style}{character c("Solid","Dashed","Dotted", "DashDot","LongDash","LongDashDot","LongDashDotDot")}
+
+\item{point.style}{character c("circle","square","diamond","triangle","triangle-down")}
+
+\item{line.size}{numeric}
+
+\item{point.size}{numeric}
+
+\item{xAxis.log}{boolean}
+
+\item{yAxis.log}{boolean}
+
+\item{xAxis.reverse}{boolean}
+
+\item{yAxis.reverse}{boolean}
+
+\item{xAxis.max}{numeric}
+
+\item{yAxis.max}{numeric}
+
+\item{xAxis.min}{numeric}
+
+\item{yAxis.min}{numeric}
+
+\item{xAxis.label}{boolean}
+
+\item{yAxis.label}{boolean}
+
+\item{legend.layout}{character}
+
+\item{legend.align}{character c("center", "left", "right")}
+
+\item{legend.valign}{character c("top", "middle", "bottom")}
+
+\item{legend.show}{boolean}
+
+\item{plot.save}{boolean}
+
+\item{plot.theme}{highcharter object}
+
+\item{xAxis.legend.fontsize}{character}
+
+\item{yAxis.legend.fontsize}{character}
+
+\item{group.legend.fontsize}{character}
+
+\item{plot.title.fontsize}{character}
+
+\item{plot.subtitle.fontsize}{character}
+
+\item{print.max.abs}{boolean}
+
+\item{fill.polygon}{boolean}
+
+\item{fill.group}{character}
 
 \item{...}{extra arguments}
 }

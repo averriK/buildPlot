@@ -39,6 +39,7 @@
 #' @param group.legend.fontsize character
 #' @param plot.title.fontsize character
 #' @param plot.subtitle.fontsize character
+#' @param print.max.abs boolean
 #' @param ... extra arguments
 #'
 #' @return plot object
@@ -82,7 +83,7 @@ buildPlot <- function(
     legend.align = "right", # c("center", "left", "right")
     legend.valign = "top", # c("top", "middle", "bottom")
     legend.show = TRUE,
-    plot.save = FALSE,
+    plot.save = TRUE,
     plot.theme = NULL,
     xAxis.legend.fontsize = "14px",
     yAxis.legend.fontsize = "14px",

@@ -1,4 +1,5 @@
 #' plot.ggplot2
+#' @param data data.frame
 #' @param ... extra arguments
 #'
 #' @return ggplot2 object
