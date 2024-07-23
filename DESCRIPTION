@@ -11,7 +11,6 @@ Imports:
     grDevices,
     RColorBrewer,
     highcharter,
-    plotly,
     epoxy,
     data.table,
     htmlwidgets,

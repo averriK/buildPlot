@@ -1,4 +1,5 @@
 #' Title
+#' @param data data.frame
 #' @param ... extra arguments
 #' 
 #' @return highcharter object
@@ -6,26 +7,10 @@
 #' 
 #' @examples
 #'
-#' @import data.table data.table
-#' @importFrom data.table as.data.table 
+#' @import data.table 
 #' @importFrom grDevices hcl.colors 
 #' @importFrom grDevices col2rgb
-#' @importFrom highcharter hc_add_series
-#' @importFrom highcharter hc_add_theme
-#' @importFrom highcharter hc_colors
-#' @importFrom highcharter highchart
-#' @importFrom highcharter hc_legend
-#' @importFrom highcharter hcaes
-#' @importFrom highcharter hc_theme_hcrt
-#' @importFrom highcharter hc_xAxis
-#' @importFrom highcharter hc_yAxis
-#' @importFrom highcharter hc_tooltip
-#' @importFrom highcharter hc_chart
-#' @importFrom highcharter hc_plotOptions
-#' @importFrom highcharter hc_size
-#' @importFrom highcharter hc_tooltip
-#' @importFrom highcharter hc_title
-#' @importFrom highcharter hc_subtitle
+#' @import highcharter 
 #' @importFrom epoxy epoxy_html
 #'
 
