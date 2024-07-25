@@ -31,6 +31,10 @@ buildPlot.highcharter <- function(data,...) {
     line.style <- "Solid"
   }
   
+  if(is.null(color.palette)){
+    color.palette <- grDevices::hcl.pals()[4]
+  }
+  
   DATA <- as.data.table(data)[, c("ID", "X", "Y")]
   
   TIP <- epoxy::epoxy_html("{{group.legend}}:{point.series.name}<br> {{xAxis.legend}}={point.x}<br> {{yAxis.legend}}={point.y}")
@@ -64,11 +68,11 @@ buildPlot.highcharter <- function(data,...) {
   }
   
   # c("line","spline","point","column","bar")
-  if (any(plot.type %in% c("line", "spline"))) {
+  if (plot.type %in% c("line", "spline")) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
-        type = "spline",
+        type = plot.type,
         dashStyle = line.style,
         lineWidth = line.size, # Apply line size here
         
@@ -76,7 +80,7 @@ buildPlot.highcharter <- function(data,...) {
       )
   }
   
-  if (any(plot.type %in% c("scatter", "point"))) {
+  if (plot.type %in% c("scatter", "point")) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
@@ -93,7 +97,7 @@ buildPlot.highcharter <- function(data,...) {
       title = list(text = yAxis.legend, style = list(fontSize = yAxis.legend.fontsize)),
       minorTickInterval = "auto",
       minorGridLineDashStyle = "Dot",
-      showFirstLabel = FALSE,
+      showFirstLabel = TRUE,
       showLastLabel = TRUE
     ) |>
   
@@ -122,12 +126,12 @@ buildPlot.highcharter <- function(data,...) {
     ) |>
     hc_chart(style = list(fontFamily = "Helvetica"))
   
-  if (!is.na(plot.title)) {
+  if (!is.null(plot.title)) {
     PLOT <- PLOT |>
       hc_title(text = plot.title, fontSize = list(fontSize = plot.title.fontsize))
   }
   
-  if (!is.na(plot.subtitle)) {
+  if (!is.null(plot.subtitle)) {
     PLOT <- PLOT |>
       hc_subtitle(text = plot.subtitle, fontSize = list(fontSize = plot.subtitle.fontsize))
   }
@@ -160,23 +164,23 @@ buildPlot.highcharter <- function(data,...) {
   
   if (xAxis.reverse == TRUE) {
     PLOT <- PLOT |>
-      hc_xAxis(reversed = TRUE)
+      hc_xAxis(opposite = TRUE)
   }
   
   if (yAxis.reverse == TRUE) {
     PLOT <- PLOT |>
-      hc_yAxis(reversed = TRUE)
+      hc_yAxis(opposite = TRUE)
   }
   
-  if (!is.na(plot.height) & is.na(plot.width)) {
+  if (!is.null(plot.height) & is.null(plot.width)) {
     PLOT <- PLOT |> hc_size(height = plot.height)
   }
   
-  if (!is.na(plot.width) & is.na(plot.height)) {
+  if (!is.null(plot.width) & is.null(plot.height)) {
     PLOT <- PLOT |> hc_size(width = plot.width)
   }
   
-  if (!is.na(plot.width) & !is.na(plot.height)) {
+  if (!is.null(plot.width) & !is.null(plot.height)) {
     PLOT <- PLOT |> hc_size(width = plot.width, height = plot.height)
   }
   
@@ -186,6 +190,15 @@ buildPlot.highcharter <- function(data,...) {
   }
   
   PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
+  
+  PLOT <- PLOT |>hc_plotOptions(
+    series = list(
+      dataLabels = list(enabled = point.dataLabels),
+      marker = list(enabled = point.marker)
+    )
+  )
+  
+  
   return(PLOT)
 }
 

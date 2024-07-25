@@ -40,6 +40,8 @@
 #' @param plot.title.fontsize character
 #' @param plot.subtitle.fontsize character
 #' @param print.max.abs boolean
+#' @param point.marker boolean
+#' @param point.dataLabels boolean
 #'
 #' @return plot object
 #' @export buildPlot
@@ -55,10 +57,10 @@ buildPlot <- function(
     data,
     library = "highcharter",
     plot.object = NULL,
-    plot.title = NA,
-    plot.subtitle = NA,
-    plot.height = NA,
-    plot.width = NA,
+    plot.title = NULL,
+    plot.subtitle = NULL,
+    plot.height = NULL,
+    plot.width = NULL,
     xAxis.legend = "X",
     yAxis.legend = "Y",
     group.legend = "ID",
@@ -91,7 +93,9 @@ buildPlot <- function(
     plot.subtitle.fontsize = "18px",
     print.max.abs = FALSE, # New flag for printing max absolute values
     fill.polygon = FALSE,
-    fill.group = ""
+    fill.group = "",
+    point.marker=TRUE,
+    point.dataLabels=FALSE
 ) {
   # Validate legend.valign
   valid_valign <- c("top", "middle", "bottom")
@@ -114,9 +118,7 @@ buildPlot <- function(
     
   }
   # 
-  if(is.null(color.palette)){
-    color.palette <- grDevices::hcl.pals()[4]
-  }
+  
   # Create a list of parameters to pass to the plotting functions
   params <- list(
     data=data,
@@ -157,7 +159,9 @@ buildPlot <- function(
     plot.subtitle.fontsize = plot.subtitle.fontsize,
     print.max.abs = print.max.abs,
     fill.polygon = fill.polygon,
-    fill.group = fill.group
+    fill.group = fill.group,
+    point.marker=point.marker,
+    point.dataLabels=point.dataLabels
   )
   
   # Switch case to call the respective plot function based on the library parameter
