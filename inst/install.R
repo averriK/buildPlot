@@ -1,7 +1,7 @@
 library(devtools)
 library(roxygen2)
 library(usethis)
-file.remove("NAMESPACE")
+file.remove("NAMESPACE") |> silentWarning()
 # (rm(list = c("buildPlot.ggplot2","buildPlot.highcharter","buildPlot.plotly","buildPlot")))
 # usethis::use_author(
 #   given="Alejandro",
@@ -16,3 +16,4 @@ remove.packages("buildPlot")
 ## Commit Push
 devtools::install()
 # remotes::install_github("averriK/buildPlot")
+
