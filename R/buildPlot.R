@@ -90,7 +90,7 @@ buildPlot <- function(
     group.legend.fontsize = "12px",
     plot.title.fontsize = "24px",
     plot.subtitle.fontsize = "18px",
-    print.max.abs = TRUE, # New flag for printing max absolute values
+    print.max.abs = FALSE, # New flag for printing max absolute values
     fill.polygon = FALSE,
     fill.group = "",
     ...

@@ -42,7 +42,7 @@ buildPlot(
   group.legend.fontsize = "12px",
   plot.title.fontsize = "24px",
   plot.subtitle.fontsize = "18px",
-  print.max.abs = TRUE,
+  print.max.abs = FALSE,
   fill.polygon = FALSE,
   fill.group = "",
   ...
