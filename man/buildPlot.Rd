@@ -8,10 +8,10 @@ buildPlot(
   data,
   library = "highcharter",
   plot.object = NULL,
-  plot.title = NA,
-  plot.subtitle = NA,
-  plot.height = NA,
-  plot.width = NA,
+  plot.title = NULL,
+  plot.subtitle = NULL,
+  plot.height = NULL,
+  plot.width = NULL,
   xAxis.legend = "X",
   yAxis.legend = "Y",
   group.legend = "ID",
@@ -45,7 +45,8 @@ buildPlot(
   print.max.abs = FALSE,
   fill.polygon = FALSE,
   fill.group = "",
-  ...
+  point.marker = TRUE,
+  point.dataLabels = FALSE
 )
 }
 \arguments{
@@ -129,7 +130,9 @@ buildPlot(
 
 \item{fill.group}{character}
 
-\item{...}{extra arguments}
+\item{point.marker}{boolean}
+
+\item{point.dataLabels}{boolean}
 }
 \value{
 plot object
