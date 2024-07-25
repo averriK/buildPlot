@@ -24,11 +24,9 @@ buildPlot.highcharter <- function(data,...) {
   
   params <- list(...)
   list2env(params, envir = environment())
-  if(is.null(plot.theme)){
-    plot.theme <- highcharter::hc_theme_flat()
-  }
   
- 
+  
+ # browser()
   if(is.null(line.style)){
     line.style <- "Solid"
   }
@@ -89,7 +87,7 @@ buildPlot.highcharter <- function(data,...) {
   }
   
   PLOT <- PLOT |>
-    hc_add_theme(hc_thm = plot.theme) |>
+    
     hc_yAxis(
       labels = list(enabled = yAxis.label),
       title = list(text = yAxis.legend, style = list(fontSize = yAxis.legend.fontsize)),
@@ -181,7 +179,13 @@ buildPlot.highcharter <- function(data,...) {
   if (!is.na(plot.width) & !is.na(plot.height)) {
     PLOT <- PLOT |> hc_size(width = plot.width, height = plot.height)
   }
-  # PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
+  
+  if(is.null(plot.theme)){
+    plot.theme <- highcharter::hc_theme_flat()
+    PLOT <- PLOT |>hc_add_theme(hc_thm = plot.theme) 
+  }
+  
+  PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
   return(PLOT)
 }
 
