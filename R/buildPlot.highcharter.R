@@ -66,11 +66,11 @@ buildPlot.highcharter <- function(data,...) {
   }
   
   # c("line","spline","point","column","bar")
-  if (plot.type %in% c("line", "spline")) {
+  if (any(plot.type %in% c("line", "spline"))) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
-        type = plot.type,
+        type = "spline",
         dashStyle = line.style,
         lineWidth = line.size, # Apply line size here
         
@@ -78,7 +78,7 @@ buildPlot.highcharter <- function(data,...) {
       )
   }
   
-  if (plot.type %in% c("scatter", "point")) {
+  if (any(plot.type %in% c("scatter", "point"))) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
@@ -181,7 +181,7 @@ buildPlot.highcharter <- function(data,...) {
   if (!is.na(plot.width) & !is.na(plot.height)) {
     PLOT <- PLOT |> hc_size(width = plot.width, height = plot.height)
   }
-  PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
+  # PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
   return(PLOT)
 }
 
