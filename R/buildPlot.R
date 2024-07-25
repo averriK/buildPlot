@@ -40,7 +40,6 @@
 #' @param plot.title.fontsize character
 #' @param plot.subtitle.fontsize character
 #' @param print.max.abs boolean
-#' @param ... extra arguments
 #'
 #' @return plot object
 #' @export buildPlot
@@ -92,8 +91,7 @@ buildPlot <- function(
     plot.subtitle.fontsize = "18px",
     print.max.abs = FALSE, # New flag for printing max absolute values
     fill.polygon = FALSE,
-    fill.group = "",
-    ...
+    fill.group = ""
 ) {
   # Validate legend.valign
   valid_valign <- c("top", "middle", "bottom")
@@ -121,6 +119,7 @@ buildPlot <- function(
   }
   # Create a list of parameters to pass to the plotting functions
   params <- list(
+    data=data,
     plot.object = plot.object,
     plot.title = plot.title,
     plot.subtitle = plot.subtitle,
@@ -158,15 +157,14 @@ buildPlot <- function(
     plot.subtitle.fontsize = plot.subtitle.fontsize,
     print.max.abs = print.max.abs,
     fill.polygon = fill.polygon,
-    fill.group = fill.group,
-    ...
+    fill.group = fill.group
   )
   
   # Switch case to call the respective plot function based on the library parameter
   switch(
     library,
-    "ggplot2" = do.call(buildPlot.ggplot2, c(list(data = data), params)),
-    "highcharter" = do.call(buildPlot.highcharter, c(list(data = data), params)),
+    "ggplot2" = do.call(buildPlot.ggplot2, params),
+    "highcharter" = do.call(buildPlot.highcharter, params),
     stop("Unsupported library specified")
   )
 }
