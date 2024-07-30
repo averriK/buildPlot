@@ -101,11 +101,11 @@ buildPlot.ggplot2 <- function(data,...) {
   }
   
   # Ensure plot.title and plot.subtitle are not added if NA
-  if (!is.na(plot.title)) {
+  if (!is.null(plot.title)) {
     PLOT <- PLOT + ggtitle(plot.title)
   }
   
-  if (!is.na(plot.subtitle)) {
+  if (!is.null(plot.subtitle)) {
     PLOT <- PLOT + labs(subtitle = plot.subtitle)
   }
   

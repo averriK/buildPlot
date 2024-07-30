@@ -1,7 +1,7 @@
 library(devtools)
 library(roxygen2)
 library(usethis)
-file.remove("NAMESPACE") |> silentWarning()
+file.remove("NAMESPACE") |> suppressWarnings()
 # (rm(list = c("buildPlot.ggplot2","buildPlot.highcharter","buildPlot.plotly","buildPlot")))
 # usethis::use_author(
 #   given="Alejandro",
