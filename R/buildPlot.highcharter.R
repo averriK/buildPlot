@@ -68,7 +68,7 @@ buildPlot.highcharter <- function(data,...) {
   }
   
   # c("line","spline","point","column","bar")
-  if (plot.type %in% c("line", "spline")) {
+  if (tolower(plot.type) %in% c("line", "spline")) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
@@ -80,7 +80,7 @@ buildPlot.highcharter <- function(data,...) {
       )
   }
   
-  if (plot.type %in% c("scatter", "point")) {
+  if (tolower(plot.type) %in% c("scatter", "point")) {
     PLOT <- PLOT |>
       hc_add_series(
         data = DATA, # main curve
@@ -186,8 +186,8 @@ buildPlot.highcharter <- function(data,...) {
   
   if(is.null(plot.theme)){
     plot.theme <- highcharter::hc_theme_flat()
-    PLOT <- PLOT |>hc_add_theme(hc_thm = plot.theme) 
   }
+  PLOT <- PLOT |>hc_add_theme(hc_thm = plot.theme) 
   
   PLOT <- PLOT |> highcharter::hc_exporting(enabled = plot.save, filename = "hc_plot")
   

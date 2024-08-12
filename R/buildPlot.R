@@ -168,7 +168,11 @@ buildPlot <- function(
   switch(
     library,
     "ggplot2" = do.call(buildPlot.ggplot2, params),
+    "gg" = do.call(buildPlot.ggplot2, params),
+    "ggplot" = do.call(buildPlot.ggplot2, params),
     "highcharter" = do.call(buildPlot.highcharter, params),
+    "hc" = do.call(buildPlot.highcharter, params),
+    "highchart" = do.call(buildPlot.highcharter, params),
     stop("Unsupported library specified")
   )
 }
