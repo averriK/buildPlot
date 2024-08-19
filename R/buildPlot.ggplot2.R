@@ -21,25 +21,22 @@ buildPlot.ggplot2 <- function(data,...) {
     stop("data must contain columns named ID, X, and Y")
   }
   # Extract parameters from the list and assign them to the current environment
-  
   params <- list(...)
   list2env(params, envir = environment())
   
-  
-  if(is.null(plot.theme)){
+  if (is.null(plot.theme)){
     plot.theme <- theme_flat()
   }
-  if(is.null(color.palette)){
+  if (is.null(color.palette)){
     color.palette <- grDevices::hcl.pals()[4]
   }
   
-  if(is.null(line.style)){
+  if (is.null(line.style)){
     line.style <- "solid"
   }
   
   DATA <- as.data.table(data)[, c("ID", "X", "Y")]
   DATA[, ID := as.factor(ID)]  # Convert ID to factor
-  
   
   if (is.null(plot.object)) {
     PLOT <- ggplot(
@@ -52,7 +49,7 @@ buildPlot.ggplot2 <- function(data,...) {
   }
   PLOT <- PLOT + plot.theme
   
-  COLORS <- grDevices::hcl.colors(n = max(3, min(9,length(unique(DATA$ID)))), palette = color.palette)
+  COLORS <- grDevices::hcl.colors(n = max(3, min(9, length(unique(DATA$ID)))), palette = color.palette)
   
   if (plot.type == "line") {
     PLOT <- PLOT +
@@ -152,49 +149,11 @@ buildPlot.ggplot2 <- function(data,...) {
     PLOT <- PLOT + theme(legend.position = "none")
   }
   
-  # Extract major breaks from ggplot2 object
-  build <- ggplot_build(PLOT)
-  major_x_breaks <- build$layout$panel_params[[1]]$x$breaks
-  major_y_breaks <- build$layout$panel_params[[1]]$y$breaks
-  
-  major_x_breaks <- major_x_breaks[is.finite(major_x_breaks)]
-  major_y_breaks <- major_y_breaks[is.finite(major_y_breaks)]
-  
-  minor_x_breaks <- generate_minor_breaks(major_x_breaks, n = 5)
-  minor_y_breaks <- generate_minor_breaks(major_y_breaks, n = 5)
-  
-  PLOT <- PLOT +
-    scale_x_continuous(
-      breaks = major_x_breaks,
-      minor_breaks = minor_x_breaks
-    ) +
-    scale_y_continuous(
-      breaks = major_y_breaks,
-      minor_breaks = minor_y_breaks
-    )
-  
-  # Add primary auxiliary dashed lines
-  for (break_value in major_x_breaks) {
-    PLOT <- PLOT + geom_vline(xintercept = break_value, linetype = 2, size=0.3,color = "#BDC3C7")
-  }
-  for (break_value in major_y_breaks) {
-    PLOT <- PLOT + geom_hline(yintercept = break_value, linetype = 2, size=0.3, color = "#BDC3C7")
-  }
-  
-  # Add secondary auxiliary dotted lines
-  for (break_value in minor_x_breaks) {
-    PLOT <- PLOT + geom_vline(xintercept = break_value, linetype = 3, size=0.1, color = "#BDC3C7")
-  }
-  for (break_value in minor_y_breaks) {
-    PLOT <- PLOT + geom_hline(yintercept = break_value, linetype = 3, size=0.1, color = "#BDC3C7")
-  }
-  
-  
   return(PLOT)
 }
 
 theme_flat <- function() {
-  theme_minimal() +
+  theme_light() +
     theme(
       plot.background = element_rect(fill = "#ECF0F1", color = NA),
       panel.background = element_rect(fill = "#ECF0F1", color = NA),
@@ -213,27 +172,4 @@ theme_flat <- function() {
       legend.text = element_text(color = "#34495e"),
       legend.title = element_text(color = "#34495e", face = "bold")
     )
-}
-
-# Function to generate minor breaks
-generate_minor_breaks <- function(major_breaks, n) {
-  # Generate minor breaks between major breaks
-  minor_breaks <- unlist(sapply(1:(length(major_breaks) - 1), function(i) {
-    seq(major_breaks[i], major_breaks[i + 1], length.out = n + 2)[-c(1, n + 2)]
-  }))
-  
-  # Generate minor breaks before the first and after the last major break
-  if(length(major_breaks) > 1) {
-    first_interval <- major_breaks[2] - major_breaks[1]
-    last_interval <- major_breaks[length(major_breaks)] - major_breaks[length(major_breaks) - 1]
-  } else {
-    first_interval <- 1
-    last_interval <- 1
-  }
-  
-  first_minor_breaks <- seq(major_breaks[1] - first_interval, major_breaks[1], length.out = n + 2)[-c(1, n + 2)]
-  last_minor_breaks <- seq(major_breaks[length(major_breaks)], major_breaks[length(major_breaks)] + last_interval, length.out = n + 2)[-c(1, n + 2)]
-  
-  # Combine all minor breaks
-  c(first_minor_breaks, minor_breaks, last_minor_breaks)
 }
