@@ -58,7 +58,7 @@ hist2D <- function(data,
   
   # Set default color palette if none is provided
   if(is.null(color.palette)){
-    color.palette <- hcl.colors(6, palette = hcl.pals()[C_6]())  # Using HCL colors if no palette is provided
+    color.palette <- hcl.colors(6, palette = hcl.pals()[6])  
   } 
   
   # Set axis limits based on the provided data or user input
