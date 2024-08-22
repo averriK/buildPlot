@@ -2,7 +2,6 @@ library(devtools)
 library(roxygen2)
 library(usethis)
 file.remove("NAMESPACE") |> suppressWarnings()
-# (rm(list = c("buildPlot.ggplot2","buildPlot.highcharter","buildPlot.plotly","buildPlot")))
 # usethis::use_author(
 #   given="Alejandro",
 #   family = "Verri Kozlowski",
@@ -14,6 +13,6 @@ usethis::use_gpl_license(version = 3, include_future = TRUE)
 devtools::check(document=TRUE)
 remove.packages("buildPlot")
 ## Commit Push
-devtools::install()
-# remotes::install_github("averriK/buildPlot")
+# devtools::install()
+remotes::install_github("averriK/buildPlot")
 
