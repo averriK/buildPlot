@@ -33,6 +33,7 @@
 #'
 #' @examples
 #' 
+
 hist2D <- function(data, 
                    nbins = 15, 
                    xAxis.label = "x", 
@@ -44,7 +45,7 @@ hist2D <- function(data,
                    yAxis.max = NULL, 
                    axis.fontsize = "14px",
                    legend.font = "Arial",
-                   color.palette = NULL,
+                   color.palette = NULL, 
                    plot.type = c("heatmap", "contour"),
                    plot.title = NULL,
                    title.fontsize = "24px",
@@ -57,8 +58,8 @@ hist2D <- function(data,
   
   # Set default color palette if none is provided
   if(is.null(color.palette)){
-    color.palette <- "Viridis"  # Using Viridis palette for continuous color mapping
-  }
+    color.palette <- hcl.colors(6, palette = hcl.pals()[C_6]())  # Using HCL colors if no palette is provided
+  } 
   
   # Set axis limits based on the provided data or user input
   Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(DT$X)
@@ -91,7 +92,9 @@ hist2D <- function(data,
       y = round(y_vals, y_decimals),
       z = z_mtx,
       type = "heatmap",
-      colorscale = color.palette,
+      colorscale = list(
+        cbind(seq(0, 1, length.out = length(color.palette)), color.palette)
+      ),
       colorbar = list(title = zAxis.label)
     )
   } else if (plot.type == "contour") {
@@ -100,7 +103,9 @@ hist2D <- function(data,
       y = round(y_vals, y_decimals),
       z = z_mtx,
       type = "contour",
-      colorscale = color.palette,
+      colorscale = list(
+        cbind(seq(0, 1, length.out = length(color.palette)), color.palette)
+      ),
       colorbar = list(title = zAxis.label)
     )
   }
@@ -116,6 +121,7 @@ hist2D <- function(data,
   # Display the plot
   return(fig)
 }
+
 
 get_decimal_places <- function(x) {
   if (all(x == round(x))) {
