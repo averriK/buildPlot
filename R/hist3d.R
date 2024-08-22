@@ -73,7 +73,7 @@ hist3D <- function(data,
   
   # Set default color palette if none is provided
   if(is.null(color.palette)){
-    color.palette <- "Viridis"  # Use the name of the color palette as a string
+    color.palette <- hcl.colors(6, palette = hcl.pals()[6])  
     
   }
   
@@ -109,8 +109,8 @@ hist3D <- function(data,
               i = c(7, 0, 0, 0, 4, 4, 2, 6, 4, 0, 3, 7),
               j = c(3, 4, 1, 2, 5, 6, 5, 5, 0, 1, 2, 2),
               k = c(0, 7, 2, 3, 6, 7, 1, 2, 5, 5, 7, 6),
-              facecolor = rep(toRGB(color.palette), each = 2),
-              # facecolor = rep(get_color(z, color.palette), each = 2),
+              # facecolor = rep(toRGB(color.palette), each = 2),
+              facecolor = rep(get_color(z, color.palette), each = 2),
               
               hoverinfo = 'skip')  # Disable hover info to prevent showing non-real values
   }
