@@ -1,6 +1,6 @@
 Package: buildPlot
 Title: Wrapper for popular plotting libraries
-Version: 0.2.0
+Version: 0.2.1
 Description: Versatile wrappers for generating plots with popular libraries like Plotly, ggplot2, and highcharter.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -15,7 +15,8 @@ Imports:
     data.table,
     htmlwidgets,
     webshot2,
-    scales
+    scales,
+    plotly
 Depends: 
     R (>= 3.5)
 LazyData: true
