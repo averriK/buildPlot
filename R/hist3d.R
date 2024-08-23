@@ -68,25 +68,34 @@ hist3D <- function(data,
                    title.fontsize = "24px",
                    title.font = "Arial") {
   
-  X_bin <- Y_bin <- Z_bin <- NULL
-  
+  # X_bin <- Y_bin <- Z_bin <- Z <- NULL
+  DT <- NULL
   # Create a copy of the data to avoid modifying the original data table
-  DT <- copy(data)
+  # DT <- copy(data)
   color.scale <- hcl.colors(6, palette = hcl.pals()[6])  
   
   
   # Set axis limits based on the provided data or user input
-  Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(DT$X)
-  Xmax <- if (!is.null(xAxis.max)) xAxis.max else max(DT$X)
-  Ymin <- if (!is.null(yAxis.min)) yAxis.min else min(DT$Y)
-  Ymax <- if (!is.null(yAxis.max)) yAxis.max else max(DT$Y)
+  Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(data$X)
+  Xmax <- if (!is.null(xAxis.max)) xAxis.max else max(data$X)
+  Ymin <- if (!is.null(yAxis.min)) yAxis.min else min(data$Y)
+  Ymax <- if (!is.null(yAxis.max)) yAxis.max else max(data$Y)
   
   # Create bins for X and Y
-  DT[, X_bin := cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
-  DT[, Y_bin := cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
-  #normalize Z
-  DT[, Z_bin := Z / sum(Z)]
+  # DT[, X_bin := cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
+  # DT[, Y_bin := cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
+  # #normalize Z
+  # DT[, Z_bin := Z / sum(Z)]
   
+  # Determine decimal places for X and Y data
+  x_decimals <- get_decimal_places(data$X)
+  y_decimals <- get_decimal_places(data$Y)
+  
+  DT <- data[,.(
+    X_bin = cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
+    Y_bin = cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
+    Z_bin = Z / sum(Z)
+  )]
   # Create a matrix for Z values (accumulated probabilities)
   z_mtx <- matrix(0, nrow = nbins, ncol = nbins)
   for (i in 1:nrow(DT)) {
@@ -155,9 +164,7 @@ hist3D <- function(data,
       )
     ))
   }
-  # Determine decimal places for X and Y data
-  x_decimals <- get_decimal_places(DT$X)
-  y_decimals <- get_decimal_places(DT$Y)
+  
   
   
   
