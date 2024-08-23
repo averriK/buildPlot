@@ -60,7 +60,7 @@ hist3D <- function(data,
                    axis.fontsize = "14px",
                    legend.font = "Arial",
                    legend.valign = "top",
-                   color.palette = hcl.pals()[33], 
+                   color.palette = "Viridis", 
                    caption = NULL,
                    plot.title = NULL,
                    title.fontsize = "24px",
@@ -97,26 +97,22 @@ hist3D <- function(data,
   # Draw the 3D histogram
   fig <- plot_ly()
 
-  # Determine unique z values and sort them
-  Z_values <- sort(unique(as.vector(z_mtx)))
-  
-  # Generate a color palette with a number of colors equal to the number of unique z values
-  color_scale <- hcl.colors(length(Z_values), palette = color.palette)
-  
-  # Loop through the matrix to add 3D bars
-  # Example function call
+  # Draw the 3D histogram with the updated function
   fig <- plot_ly()
   for (k1 in 1:nrow(z_mtx)) {
     for (k2 in 1:ncol(z_mtx)) {
-      fig <- add_3Dbar(
-        p = fig,
-        x = k1,
-        y = k2,
-        z = z_mtx[k1, k2],
-        bin.width = bin.width,
-        Z_values = Z_values,          # Pass the sorted unique z values
-        color_scale = color_scale     # Pass the color scale in hex format
-      )
+      if (z_mtx[k1, k2] > 0) {
+        fig <- add_3Dbar(
+          p = fig,
+          x = k1,
+          y = k2,
+          z = z_mtx[k1, k2],
+          bin.width = bin.width,
+          z_min = Zmin,
+          z_max = Zmax,
+          fixed_color_scale = fixed_color_scale
+        )
+      }
     }
   }
   
@@ -214,19 +210,25 @@ hist3D <- function(data,
   return(fig)
 }
 
-# Function to map z values to colors
-get_color_for_z <- function(z, Z_values, color_scale) {
-  index <- which(Z_values == z)
-  return(color_scale[index])  # Already in hex format
+# Generate a fixed set of six colors
+fixed_color_scale <- hcl.colors(6, palette = "Viridis")
+
+# Function to map z values to one of the six colors
+get_color_for_z <- function(z, z_min, z_max, fixed_color_scale) {
+  # Normalize z to a 0-5 range
+  normalized_z <- (z - z_min) / (z_max - z_min) * 5
+  color_index <- round(normalized_z) + 1  # Map to an index between 1 and 6
+  return(plotly::toRGB(fixed_color_scale[color_index]))  # Convert to RGB
 }
 
-add_3Dbar <- function(p, x, y, z, bin.width, Z_values, color_scale) {
+# Modified add_3Dbar function
+add_3Dbar <- function(p, x, y, z, bin.width, z_min, z_max, fixed_color_scale) {
   w <- bin.width
   
-  # Get the color for the current z value
-  column_color <- get_color_for_z(z, Z_values, color_scale)
+  # Get the color for the current z value, converted to RGB
+  column_color <- get_color_for_z(z, z_min, z_max, fixed_color_scale)
   
-  # Create the mesh3d for each column with facecolor in hex format
+  # Create the mesh3d for each column with facecolor in RGB format
   fig <- plotly::add_trace(p, type = "mesh3d",
                            x = c(x - w, x - w, x + w, x + w, x - w, x - w, x + w, x + w),
                            y = c(y - w, y + w, y + w, y - w, y - w, y + w, y + w, y - w),
@@ -234,11 +236,12 @@ add_3Dbar <- function(p, x, y, z, bin.width, Z_values, color_scale) {
                            i = c(7, 0, 0, 0, 4, 4, 2, 6, 4, 0, 3, 7),
                            j = c(3, 4, 1, 2, 5, 6, 5, 5, 0, 1, 2, 2),
                            k = c(0, 7, 2, 3, 6, 7, 1, 2, 5, 5, 7, 6),
-                           facecolor = rep(column_color, each = 2),  # Repeat for each triangle in the face
+                           facecolor = rep(column_color, each = 2),  # Apply color to all faces in RGB
                            hoverinfo = 'skip')  # Disable hover info to prevent showing non-real values
   
   return(fig)
 }
+
 get_decimal_places <- function(x) {
   if (all(x == round(x))) {
     return(0)
