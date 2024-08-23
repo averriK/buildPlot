@@ -60,7 +60,7 @@ hist3D <- function(data,
                    axis.fontsize = "14px",
                    legend.font = "Arial",
                    legend.valign = "top",
-                   color.palette = NULL,
+                   color.palette = hcl.pals()[33], 
                    caption = NULL,
                    plot.title = NULL,
                    title.fontsize = "24px",
@@ -71,11 +71,6 @@ hist3D <- function(data,
   # Create a copy of the data to avoid modifying the original data table
   DT <- copy(data)
   
-  # Set default color palette if none is provided
-  if(is.null(color.palette)){
-    color.palette <- hcl.colors(6, palette = hcl.pals()[6])  
-    
-  }
   
   # Set axis limits based on the provided data or user input
   Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(DT$X)
@@ -99,31 +94,33 @@ hist3D <- function(data,
   Zmax <- max(z_mtx)
   z_ticks <- seq(Zmin, Zmax, length.out = nbins)
   
-  # Define the function to add 3D bars
-  add_3Dbar <- function(p, x, y, z, width = bin.width) {
-    w <- width
-    add_trace(p, type = "mesh3d",
-              x = c(x - w, x - w, x + w, x + w, x - w, x - w, x + w, x + w),
-              y = c(y - w, y + w, y + w, y - w, y - w, y + w, y + w, y - w),
-              z = c(0, 0, 0, 0, z, z, z, z),
-              i = c(7, 0, 0, 0, 4, 4, 2, 6, 4, 0, 3, 7),
-              j = c(3, 4, 1, 2, 5, 6, 5, 5, 0, 1, 2, 2),
-              k = c(0, 7, 2, 3, 6, 7, 1, 2, 5, 5, 7, 6),
-              facecolor = rep(toRGB(color.palette), each = 2),
-
-              hoverinfo = 'skip')  # Disable hover info to prevent showing non-real values
-  }
-  
   # Draw the 3D histogram
+  fig <- plot_ly()
+
+  # Determine unique z values and sort them
+  Z_values <- sort(unique(as.vector(z_mtx)))
+  
+  # Generate a color palette with a number of colors equal to the number of unique z values
+  color_scale <- hcl.colors(length(Z_values), palette = color.palette)
+  
+  # Loop through the matrix to add 3D bars
+  # Example function call
   fig <- plot_ly()
   for (k1 in 1:nrow(z_mtx)) {
     for (k2 in 1:ncol(z_mtx)) {
-      if (z_mtx[k1, k2] > 0) {
-        fig <- fig %>% add_3Dbar(k1, k2, z_mtx[k1, k2])
-      }
+      fig <- add_3Dbar(
+        p = fig,
+        x = k1,
+        y = k2,
+        z = z_mtx[k1, k2],
+        bin.width = bin.width,
+        Z_values = Z_values,          # Pass the sorted unique z values
+        color_scale = color_scale     # Pass the color scale in hex format
+      )
     }
   }
   
+
   # Create a list for annotations
   annotations_list <- list()
   
@@ -162,7 +159,7 @@ hist3D <- function(data,
   
   
   
-  ticktext_x = seq(Xmin, Xmax, length.out = nbins) |> round(x_decimals)  # Label ticks with the correct X-axis values
+  ticktext_x = seq(Xmin, Xmax, length.out = nbins) |> round(x_decimals)  
   ticktext_y = seq(Ymin, Ymax, length.out = nbins) |> round(y_decimals)
   
   
@@ -217,7 +214,31 @@ hist3D <- function(data,
   return(fig)
 }
 
+# Function to map z values to colors
+get_color_for_z <- function(z, Z_values, color_scale) {
+  index <- which(Z_values == z)
+  return(color_scale[index])  # Already in hex format
+}
 
+add_3Dbar <- function(p, x, y, z, bin.width, Z_values, color_scale) {
+  w <- bin.width
+  
+  # Get the color for the current z value
+  column_color <- get_color_for_z(z, Z_values, color_scale)
+  
+  # Create the mesh3d for each column with facecolor in hex format
+  fig <- plotly::add_trace(p, type = "mesh3d",
+                           x = c(x - w, x - w, x + w, x + w, x - w, x - w, x + w, x + w),
+                           y = c(y - w, y + w, y + w, y - w, y - w, y + w, y + w, y - w),
+                           z = c(0, 0, 0, 0, z, z, z, z),
+                           i = c(7, 0, 0, 0, 4, 4, 2, 6, 4, 0, 3, 7),
+                           j = c(3, 4, 1, 2, 5, 6, 5, 5, 0, 1, 2, 2),
+                           k = c(0, 7, 2, 3, 6, 7, 1, 2, 5, 5, 7, 6),
+                           facecolor = rep(column_color, each = 2),  # Repeat for each triangle in the face
+                           hoverinfo = 'skip')  # Disable hover info to prevent showing non-real values
+  
+  return(fig)
+}
 get_decimal_places <- function(x) {
   if (all(x == round(x))) {
     return(0)

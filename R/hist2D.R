@@ -35,7 +35,7 @@
 #' 
 
 hist2D <- function(data, 
-                   nbins = 15, 
+                   nbins = 30, 
                    xAxis.label = "x", 
                    yAxis.label = "y", 
                    zAxis.label = "z", 
@@ -45,7 +45,7 @@ hist2D <- function(data,
                    yAxis.max = NULL, 
                    axis.fontsize = "14px",
                    legend.font = "Arial",
-                   color.palette = NULL, 
+                   color.palette = hcl.pals()[33], 
                    plot.type = c("heatmap", "contour"),
                    plot.title = NULL,
                    title.fontsize = "24px",
@@ -57,9 +57,8 @@ hist2D <- function(data,
   DT <- copy(data)
   
   # Set default color palette if none is provided
-  if(is.null(color.palette)){
-    color.palette <- hcl.colors(6, palette = hcl.pals()[6])  
-  } 
+  
+  color.scale <- hcl.colors(nbins, palette = color.palette)  
   
   # Set axis limits based on the provided data or user input
   Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(DT$X)
@@ -92,9 +91,10 @@ hist2D <- function(data,
       y = round(y_vals, y_decimals),
       z = z_mtx,
       type = "heatmap",
-      colorscale = list(
-        cbind(seq(0, 1, length.out = length(color.palette)), color.palette)
-      ),
+      # colorscale = list(
+      #   cbind(seq(0, 1, length.out = length(color.scale)), color.scale)
+      # ),
+      colors=color.scale,
       colorbar = list(title = zAxis.label)
     )
   } else if (plot.type == "contour") {
@@ -103,9 +103,10 @@ hist2D <- function(data,
       y = round(y_vals, y_decimals),
       z = z_mtx,
       type = "contour",
-      colorscale = list(
-        cbind(seq(0, 1, length.out = length(color.palette)), color.palette)
-      ),
+      # colorscale = list(
+      #   cbind(seq(0, 1, length.out = length(color.scale)), color.scale)
+      # ),
+      colors=color.scale,
       colorbar = list(title = zAxis.label)
     )
   }
