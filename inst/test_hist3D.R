@@ -5,6 +5,7 @@ Tn_TARGET <- 0
 POE_TARGET <- (1 - exp(-50 / TR_TARGET)) |> round(digits = 5)
 # DT <- RMwTable[Tn == Tn_TARGET & POE == POE_TARGET, .(Mw, R, p=1000*p/0.01)]
 DT <- RMwTable[Tn == Tn_TARGET & POE == POE_TARGET, .(Mw, R, p)]
+joint_density <- dcast(DT, Mw ~ R, value.var = "p", fill = 0)
 
 DATA <- DT[, .(Y = round(Mw,1), X = round(R/10), Z = p)]
 hist3D(data = DATA, 

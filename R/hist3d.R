@@ -84,13 +84,15 @@ hist3D <- function(data,
   # Create bins for X and Y
   DT[, X_bin := cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
   DT[, Y_bin := cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
-  
+  #normalize Z
+  DT[, Z := Z / sum(Z)]
   
   # Create a matrix for Z values (accumulated probabilities)
   z_mtx <- matrix(0, nrow = nbins, ncol = nbins)
   for (i in 1:nrow(DT)) {
     z_mtx[DT$Y_bin[i], DT$X_bin[i]] <- z_mtx[DT$Y_bin[i], DT$X_bin[i]] + DT$Z[i]
   }
+  
   
   # Define the Z-axis tick values
   Zmin <- min(z_mtx)
