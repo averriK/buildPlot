@@ -7,10 +7,6 @@
 #' @param xAxis.label string
 #' @param yAxis.label string
 #' @param zAxis.label string
-#' @param xAxis.min numeric
-#' @param xAxis.max numeric
-#' @param yAxis.min numeric
-#' @param yAxis.max numeric
 #' @param aspect.ratio list
 #' @param xAxis.legend boolean
 #' @param yAxis.legend boolean
@@ -48,10 +44,7 @@ hist3D <- function(data,
                    xAxis.label = "x", 
                    yAxis.label = "y", 
                    zAxis.label = "", 
-                   xAxis.min = NULL, 
-                   xAxis.max = NULL, 
-                   yAxis.min = NULL, 
-                   yAxis.max = NULL, 
+                   smooth.factor=3,#1 to 5
                    aspect.ratio=list(x = 1, y = 1, z = 1.5),
                    xAxis.legend = TRUE, 
                    yAxis.legend = TRUE, 
@@ -70,51 +63,47 @@ hist3D <- function(data,
   
   # X_bin <- Y_bin <- Z_bin <- Z <- NULL
   DT <- NULL
-  # Create a copy of the data to avoid modifying the original data table
-  # DT <- copy(data)
-  color.scale <- hcl.colors(6, palette = hcl.pals()[6])  
+ color.scale <- hcl.colors(6, palette = hcl.pals()[6])  
   
   
   # Set axis limits based on the provided data or user input
-  Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(data$X)
-  Xmax <- if (!is.null(xAxis.max)) xAxis.max else max(data$X)
-  Ymin <- if (!is.null(yAxis.min)) yAxis.min else min(data$Y)
-  Ymax <- if (!is.null(yAxis.max)) yAxis.max else max(data$Y)
+  Xmin <-min(data$X)
+  Xmax <-max(data$X) 
+  Ymin <- min(data$Y)
+  Ymax <-max(data$Y) 
   
-  # Create bins for X and Y
-  # DT[, X_bin := cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
-  # DT[, Y_bin := cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
-  # #normalize Z
-  # DT[, Z_bin := Z / sum(Z)]
+  # Create a copy of the data to avoid modifying the original data table
+  DT <- data[X<=Xmax & Y<=Ymax & X>=Xmin & Y>=Ymin,list(X,Y,Z)]
+  
+  
   
   # Determine decimal places for X and Y data
-  x_decimals <- get_decimal_places(data$X)
-  y_decimals <- get_decimal_places(data$Y)
-  
-  DT <- data[,.(
-    X_bin = cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
-    Y_bin = cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
-    Z_bin = Z / sum(Z)
+  x_decimals <- get_decimal_places(DT$X)
+  y_decimals <- get_decimal_places(DT$Y)
+  # Create bins for X and Y
+  BINS <- DT[,list(
+    X = cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
+    Y = cut(Y, breaks = seq(Ymin, Ymax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE),
+    Z = Z / sum(Z)#Z = Z / max(Z)
   )]
+
   # Create a matrix for Z values (accumulated probabilities)
   z_mtx <- matrix(0, nrow = nbins, ncol = nbins)
-  for (i in 1:nrow(DT)) {
-    z_mtx[DT$Y_bin[i], DT$X_bin[i]] <- z_mtx[DT$Y_bin[i], DT$X_bin[i]] + DT$Z_bin[i]
+  for (i in 1:nrow(BINS)) {
+    z_mtx[BINS$Y[i], BINS$X[i]] <- z_mtx[BINS$Y[i], BINS$X[i]] + BINS$Z[i]
   }
-  
   
   # Define the Z-axis tick values
   Zmin <- min(z_mtx)
   Zmax <- max(z_mtx)
   z_ticks <- seq(Zmin, Zmax, length.out = nbins)
-  z_index <- z_mtx |> as.vector() |> unique() |> sort() 
+  z_index <- z_mtx  |> as.vector() |> unique() |> sort() 
   NC <- (length(z_index)+6)
   color.scale <- hcl.colors(NC, palette = color.palette)  
   # Draw the 3D histogram
   fig <- plot_ly()
 
   # Draw the 3D histogram with the updated function
-  fig <- plot_ly()
   for (k1 in 1:nrow(z_mtx)) {
     for (k2 in 1:ncol(z_mtx)) {
       z <- z_mtx[k1, k2]
@@ -127,9 +116,12 @@ hist3D <- function(data,
         z_index=z_index,
         color.scale = color.scale
       )
-      
     }
   }
+  
+  # Find the row with the highest Z value
+  A <- DT[which.max(Z), .(X, Y, Z)]
+  CAPTION <- paste(caption,paste0(xAxis.label,"=",A$X,";",yAxis.label,"=",A$Y),sep="\n")
   
 
   # Create a list for annotations
@@ -154,7 +146,7 @@ hist3D <- function(data,
   if (!is.null(caption)) {
     annotations_list <- append(annotations_list, list(
       list(
-        text = caption,
+        text = CAPTION,
         x = 0.5,
         y = -0.3,
         xref = "paper",
@@ -172,8 +164,7 @@ hist3D <- function(data,
   ticktext_y = seq(Ymin, Ymax, length.out = nbins) |> round(y_decimals)
   
   
-  z_min <- min(z_mtx)
-  z_max <- max(z_mtx)
+  
   # Customize the layout for better visualization
   fig <- fig %>% layout(
     scene = list(

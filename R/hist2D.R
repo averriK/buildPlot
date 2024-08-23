@@ -61,10 +61,10 @@ hist2D <- function(data,
   color.scale <- hcl.colors(nbins, palette = color.palette)  
   
   # Set axis limits based on the provided data or user input
-  Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(DT$X)
-  Xmax <- if (!is.null(xAxis.max)) xAxis.max else max(DT$X)
-  Ymin <- if (!is.null(yAxis.min)) yAxis.min else min(DT$Y)
-  Ymax <- if (!is.null(yAxis.max)) yAxis.max else max(DT$Y)
+  Xmin <- if (!is.null(xAxis.min)) xAxis.min else min(data$X)
+  Xmax <- if (!is.null(xAxis.max)) xAxis.max else max(data$X) + 1e-10
+  Ymin <- if (!is.null(yAxis.min)) yAxis.min else min(data$Y)
+  Ymax <- if (!is.null(yAxis.max)) yAxis.max else max(data$Y) + 1e-10
   
   # Create bins for X and Y
   DT[, X_bin := cut(X, breaks = seq(Xmin, Xmax, length.out = nbins + 1), labels = FALSE, include.lowest = TRUE, right = FALSE)]
