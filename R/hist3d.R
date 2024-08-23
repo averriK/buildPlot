@@ -46,11 +46,12 @@ hist3D <- function(data,
                    bin.width = 0.4, 
                    xAxis.label = "x", 
                    yAxis.label = "y", 
-                   zAxis.label = "z", 
+                   zAxis.label = "", 
                    xAxis.min = NULL, 
                    xAxis.max = NULL, 
                    yAxis.min = NULL, 
                    yAxis.max = NULL, 
+                   aspect.ratio=list(x = 1, y = 1, z = 1.5),
                    xAxis.legend = TRUE, 
                    yAxis.legend = TRUE, 
                    zAxis.legend = FALSE,
@@ -94,9 +95,9 @@ hist3D <- function(data,
   Zmin <- min(z_mtx)
   Zmax <- max(z_mtx)
   z_ticks <- seq(Zmin, Zmax, length.out = nbins)
-z_index <- z_mtx |> as.vector() |> unique() |> sort() 
-  
-  color.scale <- hcl.colors(length(z_index)+6, palette = color.palette)  
+  z_index <- z_mtx |> as.vector() |> unique() |> sort() 
+  NC <- (length(z_index)+6)
+  color.scale <- hcl.colors(NC, palette = color.palette)  
   # Draw the 3D histogram
   fig <- plot_ly()
 
@@ -114,6 +115,7 @@ z_index <- z_mtx |> as.vector() |> unique() |> sort()
         z_index=z_index,
         color.scale = color.scale
       )
+      
     }
   }
   
@@ -169,7 +171,8 @@ z_index <- z_mtx |> as.vector() |> unique() |> sort()
         title = list(text = xAxis.label, font = list(size = axis.fontsize, family = legend.font), standoff = 10),  # Set the X axis title
         showticklabels = xAxis.legend,
         tickangle = xAxis.tickangle,  # Apply tick angle to X axis ticks
-        zeroline = TRUE,
+        zeroline = FALSE,
+        showgrid = FALSE,  
         tickvals = seq(0, nbins - 1),  # Use 0 to nbins-1 for internal tick positions
         ticktext = ticktext_x,
         gridcolor = "darkgrey",
@@ -181,7 +184,8 @@ z_index <- z_mtx |> as.vector() |> unique() |> sort()
         title = list(text = yAxis.label, font = list(size = axis.fontsize, family = legend.font), standoff = 10),  # Set the Y axis title
         showticklabels = yAxis.legend,
         tickangle = yAxis.tickangle,  # Apply tick angle to Y axis ticks
-        zeroline = TRUE,
+        zeroline = FALSE,
+        showgrid = FALSE,  
         tickvals = seq(0, nbins - 1),  # Use 0 to nbins-1 for internal tick positions
         ticktext = ticktext_y,
         gridcolor = "darkgrey",
@@ -194,14 +198,17 @@ z_index <- z_mtx |> as.vector() |> unique() |> sort()
         showticklabels = zAxis.legend,
         tickangle = zAxis.tickangle,  # Apply tick angle to Z axis ticks
         zeroline = TRUE,
+        showgrid = FALSE,  # Turn off grid 
+        
         tickvals = z_ticks |> prettyNum(),
         gridcolor = "darkgrey",
         gridwidth = 0.5,
         titlefont = list(size = axis.fontsize, family = legend.font),  # Set font for Z axis title
-        titleangle = 45  # Set angle of Z axis title to horizontal
+        titleangle = 0  # Set angle of Z axis title to horizontal
       ),
       aspectmode = "manual",
-      aspectratio = list(x = 1, y = 1, z = 1)  # Ensure equal scaling
+      aspectratio = aspect.ratio  # Example adjustment
+      
     ),
     annotations = annotations_list,
     margin = list(l = 0, r = 0, b = 100, t = 50)
