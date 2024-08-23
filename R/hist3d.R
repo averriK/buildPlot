@@ -224,7 +224,8 @@ add_3Dbar <- function(p, x, y, z, bin.width, Z_values, color_scale) {
   w <- bin.width
   
   # Get the color for the current z value
-  column_color <- get_color_for_z(z, Z_values, color_scale)
+  # column_color <- get_color_for_z(z, Z_values, color_scale)
+  column_color <- plotly::toRGB("#FF5733")  # Bright orange color for testing
   
   # Create the mesh3d for each column with facecolor in hex format
   fig <- plotly::add_trace(p, type = "mesh3d",

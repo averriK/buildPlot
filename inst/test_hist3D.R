@@ -3,15 +3,14 @@ RMwTable <- readRDS("inst/RMwTable.Rds")
 TR_TARGET <- 10000
 Tn_TARGET <- 0
 POE_TARGET <- (1 - exp(-50 / TR_TARGET)) |> round(digits = 5)
-DT <- RMwTable[Tn == Tn_TARGET & POE == POE_TARGET, .(Mw, R, p=1000*p/0.01)]
+DT <- RMwTable[Tn == Tn_TARGET & POE == POE_TARGET, .(Mw, R, p)]
 # DT <- RMwTable[Tn == Tn_TARGET & POE == POE_TARGET, .(Mw, R, p)]
 
-DATA <- DT[, .(Y = round(Mw,1), X = as.integer(R), Z = round(p,1))]
+DATA <- DT[, .(Y = round(Mw,1), X = as.integer(R), Z = round(100000*p/0.01,0))]
 
 
 hist3D(data = DATA, 
-                  nbins = 12, 
-                  color.palette = hcl.pals()[2], 
+                  nbins = 10, 
                   bin.width = 0.4, 
                   yAxis.label = "Magnitude (Mw)", 
                   xAxis.label = "Distance [km]", 
