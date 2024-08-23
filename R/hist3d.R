@@ -70,6 +70,7 @@ hist3D <- function(data,
   
   # Create a copy of the data to avoid modifying the original data table
   DT <- copy(data)
+  color.scale <- hcl.colors(6, palette = hcl.pals()[6])  
   
   
   # Set axis limits based on the provided data or user input
@@ -93,7 +94,9 @@ hist3D <- function(data,
   Zmin <- min(z_mtx)
   Zmax <- max(z_mtx)
   z_ticks <- seq(Zmin, Zmax, length.out = nbins)
+z_index <- z_mtx |> as.vector() |> unique() |> sort() 
   
+  color.scale <- hcl.colors(length(z_index)+6, palette = color.palette)  
   # Draw the 3D histogram
   fig <- plot_ly()
 
@@ -101,18 +104,16 @@ hist3D <- function(data,
   fig <- plot_ly()
   for (k1 in 1:nrow(z_mtx)) {
     for (k2 in 1:ncol(z_mtx)) {
-      if (z_mtx[k1, k2] > 0) {
-        fig <- add_3Dbar(
-          p = fig,
-          x = k1,
-          y = k2,
-          z = z_mtx[k1, k2],
-          bin.width = bin.width,
-          z_min = Zmin,
-          z_max = Zmax,
-          fixed_color_scale = fixed_color_scale
-        )
-      }
+      z <- z_mtx[k1, k2]
+      fig <- add_3Dbar(
+        p = fig,
+        x = k1,
+        y = k2,
+        z = z,
+        bin.width = bin.width,
+        z_index=z_index,
+        color.scale = color.scale
+      )
     }
   }
   
@@ -210,23 +211,12 @@ hist3D <- function(data,
   return(fig)
 }
 
-# Generate a fixed set of six colors
-fixed_color_scale <- hcl.colors(6, palette = "Viridis")
 
-# Function to map z values to one of the six colors
-get_color_for_z <- function(z, z_min, z_max, fixed_color_scale) {
-  # Normalize z to a 0-5 range
-  normalized_z <- (z - z_min) / (z_max - z_min) * 5
-  color_index <- round(normalized_z) + 1  # Map to an index between 1 and 6
-  return(plotly::toRGB(fixed_color_scale[color_index]))  # Convert to RGB
-}
 
 # Modified add_3Dbar function
-add_3Dbar <- function(p, x, y, z, bin.width, z_min, z_max, fixed_color_scale) {
+add_3Dbar <- function(p, x, y, z, bin.width, z_index, color.scale) {
   w <- bin.width
-  
-  # Get the color for the current z value, converted to RGB
-  column_color <- get_color_for_z(z, z_min, z_max, fixed_color_scale)
+  color_index <- seq(0,5)+which(z==z_index)
   
   # Create the mesh3d for each column with facecolor in RGB format
   fig <- plotly::add_trace(p, type = "mesh3d",
@@ -236,7 +226,7 @@ add_3Dbar <- function(p, x, y, z, bin.width, z_min, z_max, fixed_color_scale) {
                            i = c(7, 0, 0, 0, 4, 4, 2, 6, 4, 0, 3, 7),
                            j = c(3, 4, 1, 2, 5, 6, 5, 5, 0, 1, 2, 2),
                            k = c(0, 7, 2, 3, 6, 7, 1, 2, 5, 5, 7, 6),
-                           facecolor = rep(column_color, each = 2),  # Apply color to all faces in RGB
+                           facecolor = rep(toRGB(color.scale[color_index]), each = 2),
                            hoverinfo = 'skip')  # Disable hover info to prevent showing non-real values
   
   return(fig)
