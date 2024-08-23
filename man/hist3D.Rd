@@ -10,11 +10,12 @@ hist3D(
   bin.width = 0.4,
   xAxis.label = "x",
   yAxis.label = "y",
-  zAxis.label = "z",
+  zAxis.label = "",
   xAxis.min = NULL,
   xAxis.max = NULL,
   yAxis.min = NULL,
   yAxis.max = NULL,
+  aspect.ratio = list(x = 1, y = 1, z = 1.5),
   xAxis.legend = TRUE,
   yAxis.legend = TRUE,
   zAxis.legend = FALSE,
@@ -24,7 +25,7 @@ hist3D(
   axis.fontsize = "14px",
   legend.font = "Arial",
   legend.valign = "top",
-  color.palette = NULL,
+  color.palette = "Viridis",
   caption = NULL,
   plot.title = NULL,
   title.fontsize = "24px",
@@ -51,6 +52,8 @@ hist3D(
 \item{yAxis.min}{numeric}
 
 \item{yAxis.max}{numeric}
+
+\item{aspect.ratio}{list}
 
 \item{xAxis.legend}{boolean}
 

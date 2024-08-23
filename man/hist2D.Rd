@@ -6,7 +6,7 @@
 \usage{
 hist2D(
   data,
-  nbins = 15,
+  nbins = 30,
   xAxis.label = "x",
   yAxis.label = "y",
   zAxis.label = "z",
@@ -16,7 +16,7 @@ hist2D(
   yAxis.max = NULL,
   axis.fontsize = "14px",
   legend.font = "Arial",
-  color.palette = NULL,
+  color.palette = hcl.pals()[33],
   plot.type = c("heatmap", "contour"),
   plot.title = NULL,
   title.fontsize = "24px",

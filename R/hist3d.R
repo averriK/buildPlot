@@ -11,6 +11,7 @@
 #' @param xAxis.max numeric
 #' @param yAxis.min numeric
 #' @param yAxis.max numeric
+#' @param aspect.ratio list
 #' @param xAxis.legend boolean
 #' @param yAxis.legend boolean
 #' @param zAxis.legend boolean
