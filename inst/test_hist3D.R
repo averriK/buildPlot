@@ -7,6 +7,9 @@ POE_TARGET <- (1 - exp(-50 / TR_TARGET)) |> round(digits = 5)
 DT <- RMwTable[ Tn == Tn_TARGET & POE == POE_TARGET][p/sum(p)>=1e-5, .(Mw, R, p)]
 
 DATA <- DT[, .(Y = round(Mw,2), X = round(R), Z = p)] #hist#D detects the number of decimals of each scale and reports bins and ticks in the same precision
+
+
+# 3D histogram with bin contributions higher than 1e-5
 hist3D(data = DATA, 
        nbins = 16, 
        bin.width = 0.4, 

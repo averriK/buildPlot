@@ -11,10 +11,7 @@ hist3D(
   xAxis.label = "x",
   yAxis.label = "y",
   zAxis.label = "",
-  xAxis.min = NULL,
-  xAxis.max = NULL,
-  yAxis.min = NULL,
-  yAxis.max = NULL,
+  smooth.factor = 3,
   aspect.ratio = list(x = 1, y = 1, z = 1.5),
   xAxis.legend = TRUE,
   yAxis.legend = TRUE,
@@ -44,14 +41,6 @@ hist3D(
 \item{yAxis.label}{string}
 
 \item{zAxis.label}{string}
-
-\item{xAxis.min}{numeric}
-
-\item{xAxis.max}{numeric}
-
-\item{yAxis.min}{numeric}
-
-\item{yAxis.max}{numeric}
 
 \item{aspect.ratio}{list}
 
