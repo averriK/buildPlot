@@ -42,6 +42,8 @@ hist3D(
 
 \item{zAxis.label}{string}
 
+\item{smooth.factor}{integer}
+
 \item{aspect.ratio}{list}
 
 \item{xAxis.legend}{boolean}

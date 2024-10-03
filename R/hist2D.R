@@ -51,7 +51,7 @@ hist2D <- function(data,
                    title.fontsize = "24px",
                    title.font = "Arial") {
   
-  X_bin <- Y_bin <- NULL
+  X_bin <- Y_bin <- . <-  NULL
   
   # Create a copy of the data to avoid modifying the original data table
   DT <- copy(data)

@@ -49,7 +49,10 @@ buildPlot.ggplot2 <- function(data,...) {
   }
   PLOT <- PLOT + plot.theme
   
-  COLORS <- grDevices::hcl.colors(n = max(3, min(9, length(unique(DATA$ID)))), palette = color.palette)
+  
+  NID <- length(unique(data$ID))
+  COLORS <- grDevices::hcl.colors(n=NID, palette = color.palette)
+  # COLORS <- grDevices::hcl.colors(n = max(3, min(9, length(unique(DATA$ID)))), palette = color.palette)
   
   if (plot.type == "line") {
     PLOT <- PLOT +

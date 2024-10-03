@@ -86,7 +86,7 @@ buildPlot.highcharter <- function(data,...) {
         data = DATA, # main curve
         type = "scatter",
         marker = list(symbol = point.style, radius = point.size), # Apply point size here
-        hcaes(x = X, y = Y, group = ID)
+        hcaes(x = X, y = Y, group = ID,color = ID)
       )
   }
   

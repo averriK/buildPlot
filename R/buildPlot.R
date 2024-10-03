@@ -94,7 +94,7 @@ buildPlot <- function(
     print.max.abs = FALSE, # New flag for printing max absolute values
     fill.polygon = FALSE,
     fill.group = "",
-    point.marker=TRUE,
+    point.marker=FALSE,
     point.dataLabels=FALSE
 ) {
   # Validate legend.valign

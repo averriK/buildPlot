@@ -13,6 +13,6 @@ usethis::use_gpl_license(version = 3, include_future = TRUE)
 devtools::check(document=TRUE)
 remove.packages("buildPlot")
 ## Commit Push
-# devtools::install()
+devtools::install()
 remotes::install_github("averriK/buildPlot")
 

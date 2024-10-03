@@ -22,7 +22,7 @@
 #' @param plot.title string
 #' @param title.fontsize string
 #' @param title.font string
-#'
+#' @param smooth.factor integer
 #' @importFrom plotly plot_ly
 #' @importFrom plotly add_trace
 #' @importFrom plotly layout
@@ -62,7 +62,7 @@ hist3D <- function(data,
                    title.font = "Arial") {
   
   # X_bin <- Y_bin <- Z_bin <- Z <- NULL
-  DT <- NULL
+  DT <- . <-  NULL
  color.scale <- hcl.colors(6, palette = hcl.pals()[6])  
   
   

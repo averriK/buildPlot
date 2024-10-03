@@ -1,6 +1,7 @@
 ID <- NULL
 X <- NULL
 Y <- NULL
+Z <- NULL
 . <- NULL
 color.palette <- fill.group <- fill.polygon <- group.legend.fontsize<- NULL
 legend.align <- legend.layout <- legend.show <- legend.valign <- line.size<- NULL
