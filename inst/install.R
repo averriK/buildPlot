@@ -14,5 +14,5 @@ devtools::check(document=TRUE)
 remove.packages("buildPlot")
 ## Commit Push
 devtools::install()
-remotes::install_github("averriK/buildPlot")
+# remotes::install_github("averriK/buildPlot")
 

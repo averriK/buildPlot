@@ -45,7 +45,7 @@ buildPlot(
   print.max.abs = FALSE,
   fill.polygon = FALSE,
   fill.group = "",
-  point.marker = TRUE,
+  point.marker = FALSE,
   point.dataLabels = FALSE
 )
 }

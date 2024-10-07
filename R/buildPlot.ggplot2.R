@@ -68,14 +68,14 @@ buildPlot.ggplot2 <- function(data,...) {
   
   if (plot.type == "scatter") {
     PLOT <- PLOT +
-      geom_point(aes(color = ID), size = point.size, shape = point.style) +
+      geom_point(aes(color = ID), size = point.size, shape = 16) +
       scale_color_manual(values = COLORS)
   }
   
   if (print.max.abs) {
     max_values <- DATA[, .SD[which.max(abs(Y))], by = ID]
     PLOT <- PLOT +
-      geom_point(data = max_values, aes(x = X, y = Y, fill = ID), size = point.size, shape = point.style, show.legend = FALSE)
+      geom_point(data = max_values, aes(x = X, y = Y, fill = ID), size = point.size, shape = 16, show.legend = FALSE)
   }
   
   if (!is.na(xAxis.min) || !is.na(xAxis.max)) {
